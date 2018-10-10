@@ -1,7 +1,7 @@
 """
 @ Author: mashihan
 @ Date  : 2018/10/10 11:16
-@ Usage : tf实现含有一个隐藏层的MLP
+@ Use   : tf实现含有一个隐藏层的MLP
 """
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf

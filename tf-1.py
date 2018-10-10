@@ -1,7 +1,7 @@
 """
 @ Author: mashihan
 @ Date  : 2018/10/9 16:37
-@ Usage : tf实现简单的字符识别
+@ Use   : tf实现简单的字符识别
 """
 
 from tensorflow.examples.tutorials.mnist import input_data
