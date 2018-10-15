@@ -1,7 +1,7 @@
 """
 @ Author: mashihan
 @ Date  : 2018/10/11 18:00
-@ Use   : needs to study
+@ Use   : tf实现多层卷积网络
 """
 from models.tutorials.image.cifar10 import cifar10, cifar10_input
 import tensorflow as tf
