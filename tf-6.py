@@ -1,7 +1,7 @@
 """
 @ Author: mashihan
 @ Date  : 2018/10/13 15:22
-@ Use   : 
+@ Use   : AlexNet实现
 """
 from datetime import datetime
 import math
@@ -114,7 +114,7 @@ def time_tensorflow_run(session, target, info_string):
     print("%s: %s across %d steps, %.3f +/- %.3f sec / batch" %
           (datetime.now(), info_string, num_batches, mn, sd))
 
-def run_benchmatrk():
+def run_benchmatk():
     with tf.Graph().as_default():
         image_size = 224
         images = tf.Variable(tf.random_normal([batch_size,
@@ -135,4 +135,4 @@ def run_benchmatrk():
         time_tensorflow_run(sess, grad, "Forward-backward")
 
 
-run_benchmatrk()
+run_benchmatk()
