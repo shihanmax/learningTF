@@ -59,7 +59,10 @@ def build_dataset(words):
     """
     根据words列表，找出top50000个，构建word-index和index-word字典，topK之外的单词，假定为UNK
     :param words: [word1, word2, ...]
-    :return: 编码data，频数统计count，词汇表dictionary，反转词汇表reverse_dictionary
+    :return:  编码data
+              频统计count
+              词汇表dictionary dic[word] = idx
+              反转词汇表reverse_dictionary  r_dic[idx] = word
     """
     count = [['UNK', -1]]
     count.extend(collections.Counter(words).most_common(vocabulary_size - 1))
@@ -70,14 +73,14 @@ def build_dataset(words):
         # print(word, len(dictionary))
     data = list()  # 把字符串列表转换为对应的idx列表
     unk_count = 0
-    for word in words:
-        if word in dictionary:
+    for word in words:  #遍历训练集所有的数据
+        if word in dictionary: #是top5000
             index = dictionary[word]
         else:
             index = 0
             unk_count += 1
         data.append(index)
-    count[0][1] = unk_count
+    count[0][1] = unk_count #UNK数量
     reverse_dictionary = dict(zip(dictionary.values(), dictionary.keys()))
 
     return data, count, dictionary, reverse_dictionary
@@ -89,10 +92,21 @@ del words
 print('Most common words (+UNK)', count[:5])
 print('Sample data', data[:10], [reverse_dictionary[i] for i in data[:10]])
 
-data_index = 0
+data_index = 0  # 我们会反复调用generate_batch，所以此定义全局变量
 
 
 def generate_batch(batch_size, num_skips, skip_window):
+    """
+    skip-gram模式：
+        the quick brown fox jumped over the lazy dog
+        ->
+        (quick, the), (quick, brown), (brown, quick), (brown, fox), (fox, brown), (fox, jumped)...
+
+    :param batch_size: batch大小
+    :param num_skips: 每个单词生成多少样本，不能大于skip_window的两倍（如skip_window=1，最多可生成两个）
+    :param skip_window: 单词最远可以联系到的距离
+    :return:
+    """
     global data_index
     assert batch_size % num_skips == 0
     assert num_skips <= 2 * skip_window
@@ -156,7 +170,7 @@ with graph.as_default():
                                          num_classes=vocabulary_size))
     optimizer = tf.train.GradientDescentOptimizer(1.0).minimize(loss)
 
-    norm = tf.sqrt(tf.reduce_sum(tf.square(embeddings), 1, keep_dims=True))
+    norm = tf.sqrt(tf.reduce_sum(tf.square(embeddings), 1, keepdims=True))
     normalized_embeddings = embeddings / norm
     valid_embeddings = tf.nn.embedding_lookup(
         normalized_embeddings, valid_dataset)
